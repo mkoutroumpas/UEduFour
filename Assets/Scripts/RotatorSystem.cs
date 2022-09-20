@@ -1,9 +1,19 @@
-﻿using Unity.Entities;
+﻿using Unity.Burst;
+using Unity.Entities;
 using Unity.Jobs;
 using UnityEngine;
 
 public class RotatorSystem : JobComponentSystem
 {
+    [BurstCompile]
+    struct RotatorJob : IJobChunk
+    {
+        public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
+        {
+            
+        }
+    }
+
     protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
         return default;
