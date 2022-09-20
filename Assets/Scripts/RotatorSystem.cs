@@ -19,7 +19,9 @@ public class RotatorSystem : JobComponentSystem
 
         Entity cubeEntity = GameObjectConversionUtility.ConvertGameObjectHierarchy(cube, settings);
 
-        Entity cubeEntityInstance = EntityManager.Instantiate(cubeEntity);
+        Entity testCubeEntityInstance = EntityManager.Instantiate(cubeEntity);
+
+        EntityManager.SetComponentData(testCubeEntityInstance, new Rotator { RotationSpeed = 50 });
 
     }
 }
