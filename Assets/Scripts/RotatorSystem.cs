@@ -1,4 +1,5 @@
 ﻿using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using UnityEngine;
@@ -11,10 +12,16 @@ public class RotatorSystem : SystemBase
     struct RotatorJob : IJobChunk
     {
         public float DeltaTime { get; set; }
+        public ArchetypeChunkComponentType<Rotator> RotatorArchetypeChunkComponentType { get; set; }
 
         public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
         {
-            
+            NativeArray<Rotator> chunkRotators = chunk.GetNativeArray(RotatorArchetypeChunkComponentType);
+
+            for (var i = 0; i < chunk.Count; i++)
+            {
+                float rotationSpeed = chunkRotators[i].RotationSpeed;
+            }
         }
     }
 
