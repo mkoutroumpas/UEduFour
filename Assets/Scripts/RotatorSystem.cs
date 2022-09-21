@@ -3,20 +3,29 @@ using Unity.Entities;
 using Unity.Jobs;
 using UnityEngine;
 
-public class RotatorSystem : JobComponentSystem
+public class RotatorSystem : SystemBase
 {
+    private EntityQuery entityQuery;
+
     [BurstCompile]
     struct RotatorJob : IJobChunk
     {
+        public float DeltaTime { get; set; }
+
         public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
         {
             
         }
     }
 
-    protected override JobHandle OnUpdate(JobHandle inputDeps)
+    protected override void OnUpdate()
     {
-        return default;
+        RotatorJob rotatorJob = new RotatorJob()
+        {
+            DeltaTime = Time.DeltaTime
+        };
+
+        Dependency = rotatorJob.ScheduleParallel(entityQuery, Dependency);
     }
 
     protected override void OnCreate()
@@ -33,5 +42,6 @@ public class RotatorSystem : JobComponentSystem
 
         EntityManager.SetComponentData(testCubeEntityInstance, new Rotator { RotationSpeed = 50 });
 
+        entityQuery = GetEntityQuery(ComponentType.ReadOnly<Rotator>());
     }
 }
