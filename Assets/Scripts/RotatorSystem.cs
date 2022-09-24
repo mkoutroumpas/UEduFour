@@ -46,9 +46,9 @@ public class RotatorSystem : SystemBase
         Entity cubeEntity = GameObjectConversionUtility.ConvertGameObjectHierarchy(cube, settings);
 
         Entity testCubeEntityInstance = EntityManager.Instantiate(cubeEntity);
+        
+        EntityManager.AddComponentData(testCubeEntityInstance, new Rotator { RotationSpeed = 50 });
 
-        EntityManager.SetComponentData(testCubeEntityInstance, new Rotator { RotationSpeed = 50 });
-
-        entityQuery = GetEntityQuery(ComponentType.ReadOnly<Rotator>());
+        entityQuery = GetEntityQuery(ComponentType.ReadWrite<Rotator>());
     }
 }
