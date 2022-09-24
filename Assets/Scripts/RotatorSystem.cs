@@ -1,38 +1,25 @@
-﻿using Unity.Burst;
-using Unity.Collections;
-using Unity.Entities;
+﻿using Unity.Entities;
 using Unity.Jobs;
 using UnityEngine;
+using Unity.Mathematics;
+using Unity.Transforms;
 
 public class RotatorSystem : SystemBase
 {
-    private EntityQuery entityQuery;
-
-    [BurstCompile]
-    struct RotatorJob : IJobChunk
-    {
-        public float DeltaTime { get; set; }
-        public ArchetypeChunkComponentType<Rotator> RotatorArchetypeChunkComponentType { get; set; }
-
-        public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
-        {
-            NativeArray<Rotator> chunkRotators = chunk.GetNativeArray(RotatorArchetypeChunkComponentType);
-
-            for (var i = 0; i < chunk.Count; i++)
-            {
-                float rotationSpeed = chunkRotators[i].RotationSpeed;
-            }
-        }
-    }
-
     protected override void OnUpdate()
     {
-        RotatorJob rotatorJob = new RotatorJob()
-        {
-            DeltaTime = Time.DeltaTime
-        };
+        float deltaTime = Time.DeltaTime;
 
-        Dependency = rotatorJob.ScheduleParallel(entityQuery, Dependency);
+        Entities
+            .WithBurst()
+            .WithName("CubeRotatorSystem")
+            .ForEach((ref Rotation rotation, in Rotator rotator) => 
+            {
+                rotation.Value = math.mul(
+                    math.normalize(rotation.Value),
+                    quaternion.AxisAngle(math.up(), rotator.RotationSpeed * deltaTime));
+            })
+            .ScheduleParallel();
     }
 
     protected override void OnCreate()
@@ -46,9 +33,7 @@ public class RotatorSystem : SystemBase
         Entity cubeEntity = GameObjectConversionUtility.ConvertGameObjectHierarchy(cube, settings);
 
         Entity testCubeEntityInstance = EntityManager.Instantiate(cubeEntity);
-        
-        EntityManager.AddComponentData(testCubeEntityInstance, new Rotator { RotationSpeed = 50 });
 
-        entityQuery = GetEntityQuery(ComponentType.ReadWrite<Rotator>());
+        EntityManager.AddComponentData(testCubeEntityInstance, new Rotator { RotationSpeed = 3 });
     }
 }
