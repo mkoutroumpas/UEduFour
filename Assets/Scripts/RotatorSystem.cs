@@ -15,12 +15,15 @@ public class RotatorSystem : SystemBase
     {
         public float DeltaTime;
         public ArchetypeChunkComponentType<Rotation> RotationArchetypeChunkComponentType;
-        public ArchetypeChunkComponentType<Scale> ScaleArchetypeChunkComponentType;
         [ReadOnly] public ArchetypeChunkComponentType<Rotator> RotatorArchetypeChunkComponentType;
+        public ArchetypeChunkComponentType<Scale> ScaleArchetypeChunkComponentType;
+        [ReadOnly] public ArchetypeChunkComponentType<Scaler> ScalerArchetypeChunkComponentType;
         public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
         {
             NativeArray<Rotation> chunkRotations = chunk.GetNativeArray(RotationArchetypeChunkComponentType);
             NativeArray<Rotator> chunkRotators = chunk.GetNativeArray(RotatorArchetypeChunkComponentType);
+            NativeArray<Scale> chunkScales = chunk.GetNativeArray(ScaleArchetypeChunkComponentType);
+            NativeArray<Scaler> chunkScalers = chunk.GetNativeArray(ScalerArchetypeChunkComponentType);
 
             for (var i = 0; i < chunk.Count; i++)
             {
@@ -32,6 +35,11 @@ public class RotatorSystem : SystemBase
                     Value = math.mul(math.normalize(rotation.Value),
                         quaternion.AxisAngle(math.up(), rotator.RotationSpeed * DeltaTime))
                 };
+
+                Scale scale = chunkScales[i];
+                Scaler scaler = chunkScalers[i];
+
+
             }
         }
     }
@@ -63,6 +71,6 @@ public class RotatorSystem : SystemBase
 
         EntityManager.AddComponentData(testCubeEntityInstance, new Rotator { RotationSpeed = 3 });
 
-        EntityManager.AddComponentData(testCubeEntityInstance, new Scale { Value = 3 });
+        EntityManager.AddComponentData(testCubeEntityInstance, new Scale { Value = 1 });
     }
 }
