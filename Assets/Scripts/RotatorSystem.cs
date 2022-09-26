@@ -19,8 +19,8 @@ public class RotatorSystem : SystemBase
         [ReadOnly] public ArchetypeChunkComponentType<Rotator> RotatorArchetypeChunkComponentType;
         public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
         {
-            var chunkRotations = chunk.GetNativeArray(RotationArchetypeChunkComponentType);
-            var chunkRotators = chunk.GetNativeArray(RotatorArchetypeChunkComponentType);
+            NativeArray<Rotation> chunkRotations = chunk.GetNativeArray(RotationArchetypeChunkComponentType);
+            NativeArray<Rotator> chunkRotators = chunk.GetNativeArray(RotatorArchetypeChunkComponentType);
 
             for (var i = 0; i < chunk.Count; i++)
             {
