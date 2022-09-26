@@ -61,5 +61,7 @@ public class RotatorSystem : SystemBase
         Entity testCubeEntityInstance = EntityManager.Instantiate(cubeEntity);
 
         EntityManager.AddComponentData(testCubeEntityInstance, new Rotator { RotationSpeed = 3 });
+
+        EntityManager.AddComponentData(testCubeEntityInstance, new Scale { Value = 3 });
     }
 }
