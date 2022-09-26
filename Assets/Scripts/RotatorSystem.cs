@@ -15,6 +15,7 @@ public class RotatorSystem : SystemBase
     {
         public float DeltaTime;
         public ArchetypeChunkComponentType<Rotation> RotationArchetypeChunkComponentType;
+        public ArchetypeChunkComponentType<Scale> ScaleArchetypeChunkComponentType;
         [ReadOnly] public ArchetypeChunkComponentType<Rotator> RotatorArchetypeChunkComponentType;
         public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
         {
