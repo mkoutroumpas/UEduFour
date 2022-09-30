@@ -39,7 +39,6 @@ public class RotatorSystem : SystemBase
     struct ScalerJob : IJobChunk
     {
         public float DeltaTime;
-        public Vector2 PlusMinusScale;
         public ArchetypeChunkComponentType<Scale> ScaleArchetypeChunkComponentType;
         [ReadOnly] public ArchetypeChunkComponentType<Scaler> ScalerArchetypeChunkComponentType;
         public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
@@ -70,8 +69,7 @@ public class RotatorSystem : SystemBase
         {
             ScaleArchetypeChunkComponentType = GetArchetypeChunkComponentType<Scale>(false),
             ScalerArchetypeChunkComponentType = GetArchetypeChunkComponentType<Scaler>(true),
-            DeltaTime = Time.DeltaTime,
-            PlusMinusScale = new Vector2(-2, 2)
+            DeltaTime = Time.DeltaTime
         };
 
         this.Dependency = JobHandle.CombineDependencies
@@ -95,6 +93,6 @@ public class RotatorSystem : SystemBase
 
         EntityManager.AddComponentData(testCubeEntityInstance, new Rotator { RotationSpeed = 3 });
 
-        EntityManager.AddComponentData(testCubeEntityInstance, new Scaler { Amount = 3 });
+        EntityManager.AddComponentData(testCubeEntityInstance, new Scaler { ScaleFromTo = new Vector2(-2, 2), ScaleSpeed = 2 });
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Unity.Entities;
+using UnityEngine;
 
 public struct Rotator : IComponentData
 {
@@ -7,5 +8,6 @@ public struct Rotator : IComponentData
 
 public struct Scaler : IComponentData
 {
-    public float Amount;
+    public Vector2 ScaleFromTo;
+    public float ScaleSpeed;
 }
