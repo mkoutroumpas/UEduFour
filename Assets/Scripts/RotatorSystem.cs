@@ -93,6 +93,6 @@ public class RotatorSystem : SystemBase
 
         EntityManager.AddComponentData(testCubeEntityInstance, new Rotator { RotationSpeed = 3 });
 
-        EntityManager.AddComponentData(testCubeEntityInstance, new Scaler { ScaleFromTo = new Vector2(-2, 2), ScaleSpeed = 2 });
+        EntityManager.AddComponentData(testCubeEntityInstance, new Scaler { ScaleFromTo = new Vector2(0.5f, 2f), ScaleSpeed = 2 });
     }
 }
