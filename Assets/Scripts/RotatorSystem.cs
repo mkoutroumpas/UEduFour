@@ -94,7 +94,7 @@ public class RotatorSystem : SystemBase
 
         EntityManager.AddComponentData(testCubeEntityInstance, new Rotator { RotationSpeed = 3 });
 
-        Debug.Log($"EntityManager.HasComponent<LocalToWorld>(testCubeEntityInstance): {EntityManager.HasComponent<LocalToWorld>(testCubeEntityInstance)}");
+        Debug.Log($"EntityManager.HasComponent<CompositeScale>(testCubeEntityInstance): {EntityManager.HasComponent<CompositeScale>(testCubeEntityInstance)}");
 
         EntityManager.AddComponentData(testCubeEntityInstance, new Scale { Value = 1 });
         EntityManager.AddComponentData(testCubeEntityInstance, new Scaler { ScaleFrom = 0.5f, ScaleTo = 2f, ScaleSpeed = 2 });
