@@ -8,6 +8,7 @@ public struct Rotator : IComponentData
 
 public struct Scaler : IComponentData
 {
-    public Vector2 ScaleFromTo;
+    public float ScaleFrom;
+    public float ScaleTo;
     public float ScaleSpeed;
 }
