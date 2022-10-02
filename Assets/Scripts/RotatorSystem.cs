@@ -51,7 +51,8 @@ public class RotatorSystem : SystemBase
                 Scale scale = chunkScales[i];
                 Scaler scaler = chunkScalers[i];
 
-
+                
+                Debug.Log($"chunkScales[{i}].Value = {chunkScales[i].Value}");
             }
         }
     }
