@@ -58,8 +58,14 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
-*.meta
 
 /Packages/packages-lock.json
 /ProjectSettings/PackageManagerSettings.asset
 
+Assets/Resources/Cube.prefab.meta
+Assets/Scenes/SampleScene.unity.meta
+Assets/Scripts/Components.cs.meta
+Assets/Scripts/RotatorSystem.cs.meta
+Assets/Resources.meta
+Assets/Scenes.meta
+Assets/Scripts.meta
