@@ -11,7 +11,7 @@ public class RotatorSystem : SystemBase
     private EntityQuery entityQuery;
 
     [BurstCompile]
-    struct ScalerJob : IJobChunk
+    struct ScalerAndRotatorJob : IJobChunk
     {
         public float DeltaTime;
         public ArchetypeChunkComponentType<LocalToWorld> LocalToWorldArchetypeChunkComponentType;
@@ -39,14 +39,14 @@ public class RotatorSystem : SystemBase
 
     protected override void OnUpdate()
     {
-        ScalerJob scalerJob = new ScalerJob()
+        ScalerAndRotatorJob scalerAndRotatorJob = new ScalerAndRotatorJob()
         {
             LocalToWorldArchetypeChunkComponentType = GetArchetypeChunkComponentType<LocalToWorld>(false),
             ScalerArchetypeChunkComponentType = GetArchetypeChunkComponentType<Scaler>(true),
             DeltaTime = Time.DeltaTime
         };
 
-        this.Dependency = scalerJob.ScheduleParallel(entityQuery, this.Dependency);
+        this.Dependency = scalerAndRotatorJob.ScheduleParallel(entityQuery, this.Dependency);
     }
 
     protected override void OnCreate()
