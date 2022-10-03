@@ -39,50 +39,57 @@ public class RotatorSystem : SystemBase
     struct ScalerJob : IJobChunk
     {
         public float DeltaTime;
-        public ArchetypeChunkComponentType<Scale> ScaleArchetypeChunkComponentType;
-        [ReadOnly] public ArchetypeChunkComponentType<Scaler> ScalerArchetypeChunkComponentType;
+        public ArchetypeChunkComponentType<LocalToWorld> LocalToWorldArchetypeChunkComponentType;
+        //[ReadOnly] public ArchetypeChunkComponentType<Scaler> ScalerArchetypeChunkComponentType;
         public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
         {
-            NativeArray<Scale> chunkScales = chunk.GetNativeArray(ScaleArchetypeChunkComponentType);
-            NativeArray<Scaler> chunkScalers = chunk.GetNativeArray(ScalerArchetypeChunkComponentType);
+            NativeArray<LocalToWorld> chunkLocalToWorlds = chunk.GetNativeArray(LocalToWorldArchetypeChunkComponentType);
+            //NativeArray<Scaler> chunkScalers = chunk.GetNativeArray(ScalerArchetypeChunkComponentType);
 
             for (var i = 0; i < chunk.Count; i++)
             {
-                Scale scale = chunkScales[i];
-                Scaler scaler = chunkScalers[i];
+                LocalToWorld localToWorld = chunkLocalToWorlds[i];
+                //Scaler scaler = chunkScalers[i];
 
-                
-                Debug.Log($"chunkScales[{i}].Value = {chunkScales[i].Value}");
+                chunkLocalToWorlds[i] = new LocalToWorld
+                {
+                    Value = float4x4.TRS(localToWorld.Position, localToWorld.Rotation, 5f)
+                };
+
+                Debug.Log($"chunkLocalToWorlds[{i}].Value = {chunkLocalToWorlds[i].Value}");
             }
         }
     }
 
     protected override void OnUpdate()
     {
-        RotatorJob rotatorJob = new RotatorJob()
-        {
-            RotationArchetypeChunkComponentType = GetArchetypeChunkComponentType<Rotation>(false),
-            RotatorArchetypeChunkComponentType = GetArchetypeChunkComponentType<Rotator>(true),
-            DeltaTime = Time.DeltaTime
-        };
+        //RotatorJob rotatorJob = new RotatorJob()
+        //{
+        //    RotationArchetypeChunkComponentType = GetArchetypeChunkComponentType<Rotation>(false),
+        //    RotatorArchetypeChunkComponentType = GetArchetypeChunkComponentType<Rotator>(true),
+        //    DeltaTime = Time.DeltaTime
+        //};
 
         ScalerJob scalerJob = new ScalerJob()
         {
-            ScaleArchetypeChunkComponentType = GetArchetypeChunkComponentType<Scale>(false),
-            ScalerArchetypeChunkComponentType = GetArchetypeChunkComponentType<Scaler>(true),
+            LocalToWorldArchetypeChunkComponentType = GetArchetypeChunkComponentType<LocalToWorld>(false),
+            //ScalerArchetypeChunkComponentType = GetArchetypeChunkComponentType<Scaler>(true),
             DeltaTime = Time.DeltaTime
         };
 
-        this.Dependency = JobHandle.CombineDependencies
-            (rotatorJob.ScheduleParallel(entityQuery, this.Dependency), 
-            scalerJob.ScheduleParallel(entityQuery, this.Dependency));
+        //this.Dependency = JobHandle.CombineDependencies
+        //    (rotatorJob.ScheduleParallel(entityQuery, this.Dependency), 
+        //    scalerJob.ScheduleParallel(entityQuery, this.Dependency));
+
+        this.Dependency = scalerJob.ScheduleParallel(entityQuery, this.Dependency);
     }
 
     protected override void OnCreate()
     {
         base.OnCreate();
 
-        entityQuery = GetEntityQuery(ComponentType.ReadOnly<Rotator>(), ComponentType.ReadOnly<Scaler>());
+        //entityQuery = GetEntityQuery(ComponentType.ReadOnly<Rotator>(), ComponentType.ReadOnly<Scaler>());
+        entityQuery = GetEntityQuery(ComponentType.ReadOnly<LocalToWorld>());
 
         GameObject cube = Resources.Load("Cube", typeof(GameObject)) as GameObject;
 
@@ -92,11 +99,16 @@ public class RotatorSystem : SystemBase
 
         Entity testCubeEntityInstance = EntityManager.Instantiate(cubeEntity);
 
-        EntityManager.AddComponentData(testCubeEntityInstance, new Rotator { RotationSpeed = 3 });
+        //EntityManager.AddComponentData(testCubeEntityInstance, new Rotator { RotationSpeed = 3 });
 
-        Debug.Log($"EntityManager.HasComponent<CompositeScale>(testCubeEntityInstance): {EntityManager.HasComponent<CompositeScale>(testCubeEntityInstance)}");
+        //EntityManager.AddComponent<Scale>(testCubeEntityInstance);
+        //EntityManager.SetComponentData(testCubeEntityInstance, new Scale { Value = 1 });
 
-        EntityManager.AddComponentData(testCubeEntityInstance, new Scale { Value = 1 });
-        EntityManager.AddComponentData(testCubeEntityInstance, new Scaler { ScaleFrom = 0.5f, ScaleTo = 2f, ScaleSpeed = 2 });
+        //EntityManager.AddComponentData(testCubeEntityInstance, new Scaler { ScaleFrom = 0.5f, ScaleTo = 2f, ScaleSpeed = 2 });
+
+        Debug.Log($"EntityManager.HasComponent<LocalToWorld>(testCubeEntityInstance): {EntityManager.HasComponent<LocalToWorld>(testCubeEntityInstance)}");
+        //Debug.Log($"EntityManager.HasComponent<Translation>(testCubeEntityInstance): {EntityManager.HasComponent<Translation>(testCubeEntityInstance)}");
+        //Debug.Log($"EntityManager.HasComponent<Rotation>(testCubeEntityInstance): {EntityManager.HasComponent<Rotation>(testCubeEntityInstance)}");
+        //Debug.Log($"EntityManager.HasComponent<Scale>(testCubeEntityInstance): {EntityManager.HasComponent<Scale>(testCubeEntityInstance)}");
     }
 }
