@@ -16,16 +16,19 @@ public class RotatorSystem : SystemBase
         public float DeltaTime;
         public ArchetypeChunkComponentType<LocalToWorld> LocalToWorldArchetypeChunkComponentType;
         [ReadOnly] public ArchetypeChunkComponentType<Scaler> ScalerArchetypeChunkComponentType;
+        [ReadOnly] public ArchetypeChunkComponentType<Rotator> RotatorArchetypeChunkComponentType;
 
         public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
         {
             NativeArray<LocalToWorld> chunkLocalToWorlds = chunk.GetNativeArray(LocalToWorldArchetypeChunkComponentType);
             NativeArray<Scaler> chunkScalers = chunk.GetNativeArray(ScalerArchetypeChunkComponentType);
+            NativeArray<Rotator> chunkRotators = chunk.GetNativeArray(RotatorArchetypeChunkComponentType);
 
             for (var i = 0; i < chunk.Count; i++)
             {
                 LocalToWorld localToWorld = chunkLocalToWorlds[i];
                 Scaler scaler = chunkScalers[i];
+                Rotator rotator = chunkRotators[i];
 
                 chunkLocalToWorlds[i] = new LocalToWorld
                 {
@@ -43,6 +46,7 @@ public class RotatorSystem : SystemBase
         {
             LocalToWorldArchetypeChunkComponentType = GetArchetypeChunkComponentType<LocalToWorld>(false),
             ScalerArchetypeChunkComponentType = GetArchetypeChunkComponentType<Scaler>(true),
+            RotatorArchetypeChunkComponentType = GetArchetypeChunkComponentType<Rotator>(true),
             DeltaTime = Time.DeltaTime
         };
 
@@ -53,7 +57,8 @@ public class RotatorSystem : SystemBase
     {
         base.OnCreate();
 
-        entityQuery = GetEntityQuery(ComponentType.ReadOnly<LocalToWorld>(), ComponentType.ReadOnly<Scaler>());
+        entityQuery = GetEntityQuery(
+            ComponentType.ReadOnly<LocalToWorld>(), ComponentType.ReadOnly<Scaler>(), ComponentType.ReadOnly<Rotator>());
 
         GameObject cube = Resources.Load("Cube", typeof(GameObject)) as GameObject;
 
@@ -64,6 +69,7 @@ public class RotatorSystem : SystemBase
         Entity testCubeEntityInstance = EntityManager.Instantiate(cubeEntity);
 
         EntityManager.AddComponentData(testCubeEntityInstance, new Scaler { To = 5f });
+        EntityManager.AddComponentData(testCubeEntityInstance, new Rotator { Speed = 3 });
 
     }
 }
