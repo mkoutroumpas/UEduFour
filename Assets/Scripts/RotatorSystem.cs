@@ -31,7 +31,7 @@ public class RotatorSystem : SystemBase
                 Scaler scaler = chunkScalers[i];
                 Rotator rotator = chunkRotators[i];
 
-                float angleDegrees = rotator.CurrentAngle + rotator.Speed * DeltaTime;
+                float angleDegrees = rotator.Angle + rotator.Speed * DeltaTime;
 
                 chunkLocalToWorlds[i] = new LocalToWorld
                 {
@@ -40,11 +40,11 @@ public class RotatorSystem : SystemBase
 
                 chunkRotators[i] = new Rotator
                 {
-                    CurrentAngle = angleDegrees,
+                    Angle = angleDegrees,
                     Speed = rotator.Speed
                 };
 
-                Debug.Log($"chunkRotators[{i}].CurrentAngle = {chunkRotators[i].CurrentAngle}");
+                Debug.Log($"chunkRotators[{i}].CurrentAngle = {chunkRotators[i].Angle}");
             }
         }
     }
@@ -77,7 +77,7 @@ public class RotatorSystem : SystemBase
         Entity testCubeEntityInstance = EntityManager.Instantiate(cubeEntity);
 
         EntityManager.AddComponentData(testCubeEntityInstance, new Scaler { To = 5f });
-        EntityManager.AddComponentData(testCubeEntityInstance, new Rotator { Speed = 3f, CurrentAngle = 0f });
+        EntityManager.AddComponentData(testCubeEntityInstance, new Rotator { Speed = 3f, Angle = 0f });
 
     }
 }

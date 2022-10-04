@@ -2,8 +2,8 @@
 
 public struct Rotator : IComponentData
 {
-    public float Speed { get; set; }
-    public float CurrentAngle { get; set; }
+    public float Speed;
+    public float Angle;
 }
 
 public struct Scaler : IComponentData
