@@ -14,6 +14,7 @@ public class RotatorSystem : SystemBase
     struct ScalerAndRotatorJob : IJobChunk
     {
         public float DeltaTime;
+
         public ArchetypeChunkComponentType<LocalToWorld> LocalToWorldArchetypeChunkComponentType;
         [ReadOnly] public ArchetypeChunkComponentType<Scaler> ScalerArchetypeChunkComponentType;
         [ReadOnly] public ArchetypeChunkComponentType<Rotator> RotatorArchetypeChunkComponentType;
@@ -30,27 +31,32 @@ public class RotatorSystem : SystemBase
                 Scaler scaler = chunkScalers[i];
                 Rotator rotator = chunkRotators[i];
 
-                chunkLocalToWorlds[i] = new LocalToWorld
+                Rotation rotation = new Rotation
                 {
-                    Value = float4x4.TRS(localToWorld.Position, localToWorld.Rotation, scaler.To)
+                    Value = math.mul(math.normalize(localToWorld.Rotation),
+                        quaternion.AxisAngle(math.up(), rotator.Speed * DeltaTime))
                 };
 
-                Debug.Log($"chunkLocalToWorlds[{i}].Value = {chunkLocalToWorlds[i].Value}");
+                chunkLocalToWorlds[i] = new LocalToWorld
+                {
+                    Value = float4x4.TRS(localToWorld.Position, quaternion.EulerXYZ(0, 45 * math.PI / 180, 0), scaler.To)
+                };
+
+                //Debug.Log($"chunkLocalToWorlds[{i}].Value = {chunkLocalToWorlds[i].Value}");
             }
         }
     }
 
     protected override void OnUpdate()
     {
-        ScalerAndRotatorJob scalerAndRotatorJob = new ScalerAndRotatorJob()
+        Dependency = new ScalerAndRotatorJob()
         {
             LocalToWorldArchetypeChunkComponentType = GetArchetypeChunkComponentType<LocalToWorld>(false),
             ScalerArchetypeChunkComponentType = GetArchetypeChunkComponentType<Scaler>(true),
             RotatorArchetypeChunkComponentType = GetArchetypeChunkComponentType<Rotator>(true),
             DeltaTime = Time.DeltaTime
-        };
 
-        this.Dependency = scalerAndRotatorJob.ScheduleParallel(entityQuery, this.Dependency);
+        }.ScheduleParallel(entityQuery, Dependency);
     }
 
     protected override void OnCreate()
@@ -69,7 +75,7 @@ public class RotatorSystem : SystemBase
         Entity testCubeEntityInstance = EntityManager.Instantiate(cubeEntity);
 
         EntityManager.AddComponentData(testCubeEntityInstance, new Scaler { To = 5f });
-        EntityManager.AddComponentData(testCubeEntityInstance, new Rotator { Speed = 3 });
+        EntityManager.AddComponentData(testCubeEntityInstance, new Rotator { Speed = 3f });
 
     }
 }
