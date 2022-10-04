@@ -29,7 +29,7 @@ public class RotatorSystem : SystemBase
 
                 chunkLocalToWorlds[i] = new LocalToWorld
                 {
-                    Value = float4x4.TRS(localToWorld.Position, localToWorld.Rotation, scaler.ScaleTo)
+                    Value = float4x4.TRS(localToWorld.Position, localToWorld.Rotation, scaler.To)
                 };
 
                 Debug.Log($"chunkLocalToWorlds[{i}].Value = {chunkLocalToWorlds[i].Value}");
@@ -63,6 +63,7 @@ public class RotatorSystem : SystemBase
 
         Entity testCubeEntityInstance = EntityManager.Instantiate(cubeEntity);
 
-        EntityManager.AddComponentData(testCubeEntityInstance, new Scaler { ScaleTo = 5f });
+        EntityManager.AddComponentData(testCubeEntityInstance, new Scaler { To = 5f });
+
     }
 }
