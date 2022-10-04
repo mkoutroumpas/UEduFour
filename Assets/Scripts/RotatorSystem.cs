@@ -17,7 +17,7 @@ public class RotatorSystem : SystemBase
 
         public ArchetypeChunkComponentType<LocalToWorld> LocalToWorldArchetypeChunkComponentType;
         [ReadOnly] public ArchetypeChunkComponentType<Scaler> ScalerArchetypeChunkComponentType;
-        [ReadOnly] public ArchetypeChunkComponentType<Rotator> RotatorArchetypeChunkComponentType;
+        public ArchetypeChunkComponentType<Rotator> RotatorArchetypeChunkComponentType;
 
         public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
         {
@@ -31,18 +31,20 @@ public class RotatorSystem : SystemBase
                 Scaler scaler = chunkScalers[i];
                 Rotator rotator = chunkRotators[i];
 
-                Rotation rotation = new Rotation
-                {
-                    Value = math.mul(math.normalize(localToWorld.Rotation),
-                        quaternion.AxisAngle(math.up(), rotator.Speed * DeltaTime))
-                };
+                float angleDegrees = rotator.CurrentAngle + rotator.Speed * DeltaTime;
 
                 chunkLocalToWorlds[i] = new LocalToWorld
                 {
-                    Value = float4x4.TRS(localToWorld.Position, quaternion.EulerXYZ(0, 45 * math.PI / 180, 0), scaler.To)
+                    Value = float4x4.TRS(localToWorld.Position, quaternion.EulerXYZ(0, angleDegrees * math.PI / 180, 0), scaler.To)
                 };
 
-                //Debug.Log($"chunkLocalToWorlds[{i}].Value = {chunkLocalToWorlds[i].Value}");
+                chunkRotators[i] = new Rotator
+                {
+                    CurrentAngle = angleDegrees,
+                    Speed = rotator.Speed
+                };
+
+                Debug.Log($"chunkRotators[{i}].CurrentAngle = {chunkRotators[i].CurrentAngle}");
             }
         }
     }
@@ -53,7 +55,7 @@ public class RotatorSystem : SystemBase
         {
             LocalToWorldArchetypeChunkComponentType = GetArchetypeChunkComponentType<LocalToWorld>(false),
             ScalerArchetypeChunkComponentType = GetArchetypeChunkComponentType<Scaler>(true),
-            RotatorArchetypeChunkComponentType = GetArchetypeChunkComponentType<Rotator>(true),
+            RotatorArchetypeChunkComponentType = GetArchetypeChunkComponentType<Rotator>(false),
             DeltaTime = Time.DeltaTime
 
         }.ScheduleParallel(entityQuery, Dependency);
@@ -64,7 +66,7 @@ public class RotatorSystem : SystemBase
         base.OnCreate();
 
         entityQuery = GetEntityQuery(
-            ComponentType.ReadOnly<LocalToWorld>(), ComponentType.ReadOnly<Scaler>(), ComponentType.ReadOnly<Rotator>());
+            ComponentType.ReadOnly<LocalToWorld>(), ComponentType.ReadOnly<Scaler>(), ComponentType.ReadWrite<Rotator>());
 
         GameObject cube = Resources.Load("Cube", typeof(GameObject)) as GameObject;
 
@@ -75,7 +77,7 @@ public class RotatorSystem : SystemBase
         Entity testCubeEntityInstance = EntityManager.Instantiate(cubeEntity);
 
         EntityManager.AddComponentData(testCubeEntityInstance, new Scaler { To = 5f });
-        EntityManager.AddComponentData(testCubeEntityInstance, new Rotator { Speed = 3f });
+        EntityManager.AddComponentData(testCubeEntityInstance, new Rotator { Speed = 3f, CurrentAngle = 0f });
 
     }
 }

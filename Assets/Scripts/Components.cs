@@ -1,9 +1,9 @@
 ﻿using Unity.Entities;
-using UnityEngine;
 
 public struct Rotator : IComponentData
 {
-    public float Speed;
+    public float Speed { get; set; }
+    public float CurrentAngle { get; set; }
 }
 
 public struct Scaler : IComponentData
