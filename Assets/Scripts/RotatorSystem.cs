@@ -16,7 +16,7 @@ public class RotatorSystem : SystemBase
         public float DeltaTime;
 
         public ArchetypeChunkComponentType<LocalToWorld> LocalToWorldArchetypeChunkComponentType;
-        [ReadOnly] public ArchetypeChunkComponentType<Scaler> ScalerArchetypeChunkComponentType;
+        public ArchetypeChunkComponentType<Scaler> ScalerArchetypeChunkComponentType;
         public ArchetypeChunkComponentType<Rotator> RotatorArchetypeChunkComponentType;
 
         public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
@@ -32,6 +32,10 @@ public class RotatorSystem : SystemBase
                 Rotator rotator = chunkRotators[i];
 
                 float angleDegrees = rotator.Angle + rotator.Speed * DeltaTime;
+
+                float scale = localToWorld.Value.GetUniformScale();
+
+                Debug.Log($"scale = {scale}"); // scale is sometimes zero. Investigate why.
 
                 chunkLocalToWorlds[i] = new LocalToWorld
                 {
@@ -53,9 +57,9 @@ public class RotatorSystem : SystemBase
     {
         Dependency = new ScalerAndRotatorJob()
         {
-            LocalToWorldArchetypeChunkComponentType = GetArchetypeChunkComponentType<LocalToWorld>(false),
-            ScalerArchetypeChunkComponentType = GetArchetypeChunkComponentType<Scaler>(true),
-            RotatorArchetypeChunkComponentType = GetArchetypeChunkComponentType<Rotator>(false),
+            LocalToWorldArchetypeChunkComponentType = GetArchetypeChunkComponentType<LocalToWorld>(),
+            ScalerArchetypeChunkComponentType = GetArchetypeChunkComponentType<Scaler>(),
+            RotatorArchetypeChunkComponentType = GetArchetypeChunkComponentType<Rotator>(),
             DeltaTime = Time.DeltaTime
 
         }.ScheduleParallel(entityQuery, Dependency);
@@ -66,7 +70,7 @@ public class RotatorSystem : SystemBase
         base.OnCreate();
 
         entityQuery = GetEntityQuery(
-            ComponentType.ReadOnly<LocalToWorld>(), ComponentType.ReadOnly<Scaler>(), ComponentType.ReadWrite<Rotator>());
+            ComponentType.ReadOnly<LocalToWorld>(), ComponentType.ReadWrite<Scaler>(), ComponentType.ReadWrite<Rotator>());
 
         GameObject cube = Resources.Load("Cube", typeof(GameObject)) as GameObject;
 
@@ -76,7 +80,7 @@ public class RotatorSystem : SystemBase
 
         Entity testCubeEntityInstance = EntityManager.Instantiate(cubeEntity);
 
-        EntityManager.AddComponentData(testCubeEntityInstance, new Scaler { To = 5f });
+        EntityManager.AddComponentData(testCubeEntityInstance, new Scaler { From = 2f, To = 5f, Speed = 2f });
         EntityManager.AddComponentData(testCubeEntityInstance, new Rotator { Speed = 3f, Angle = 0f });
 
     }
