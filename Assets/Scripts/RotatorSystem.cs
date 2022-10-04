@@ -35,7 +35,7 @@ public class RotatorSystem : SystemBase
 
                 chunkLocalToWorlds[i] = new LocalToWorld
                 {
-                    Value = float4x4.TRS(localToWorld.Position, quaternion.EulerXYZ(0, angleDegrees * math.PI / 180, 0), scaler.To)
+                    Value = float4x4.TRS(localToWorld.Position, quaternion.EulerXYZ(0, math.radians(angleDegrees), 0), scaler.To)
                 };
 
                 chunkRotators[i] = new Rotator
