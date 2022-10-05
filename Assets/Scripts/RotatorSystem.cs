@@ -15,6 +15,8 @@ public class RotatorSystem : SystemBase
     {
         public float DeltaTime;
 
+        public bool EnableDebugLogging;
+
         public ArchetypeChunkComponentType<LocalToWorld> LocalToWorldArchetypeChunkComponentType;
         public ArchetypeChunkComponentType<Scaler> ScalerArchetypeChunkComponentType;
         public ArchetypeChunkComponentType<Rotator> RotatorArchetypeChunkComponentType;
@@ -48,9 +50,9 @@ public class RotatorSystem : SystemBase
                     Scale = scale
                 };
 
-                Debug.Log($"scaler.Speed = {scaler.Speed}");
+                if (EnableDebugLogging) Debug.Log($"scaler.Speed = {scaler.Speed}");
 
-                Debug.Log($"scale = {scale}"); // scale is sometimes zero. Investigate why.
+                if (EnableDebugLogging) Debug.Log($"scale = {scale}"); // scale is sometimes zero. Investigate why.
 
                 float angleDegrees = rotator.Angle + rotator.Speed * DeltaTime;
 
@@ -65,7 +67,7 @@ public class RotatorSystem : SystemBase
                     Speed = rotator.Speed
                 };
 
-                Debug.Log($"chunkRotators[{i}].CurrentAngle = {chunkRotators[i].Angle}");
+                if (EnableDebugLogging) Debug.Log($"chunkRotators[{i}].CurrentAngle = {chunkRotators[i].Angle}");
             }
         }
     }
