@@ -97,6 +97,7 @@ public class RotatorSystem : SystemBase
 
         Entity testCubeEntityInstance = EntityManager.Instantiate(cubeEntity);
 
+        EntityManager.SetComponentData(testCubeEntityInstance, new Translation { Value = new float3(3f, 0f, 0f) });
         EntityManager.AddComponentData(testCubeEntityInstance, new Scaler { From = 2f, To = 5f, Speed = 0.1f, Scale = 3f });
         EntityManager.AddComponentData(testCubeEntityInstance, new Rotator { Speed = 60f, Angle = 0f });
 
