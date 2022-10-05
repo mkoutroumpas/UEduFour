@@ -33,13 +33,28 @@ public class RotatorSystem : SystemBase
 
                 float angleDegrees = rotator.Angle + rotator.Speed * DeltaTime;
 
-                float scale = localToWorld.Value.GetUniformScale();
+                float scale = scaler.Scale;
 
-                Debug.Log($"scale = {scale}"); // scale is sometimes zero. Investigate why.
+                if (scale >= scaler.To || scale <= scaler.From)
+                {
+                    scaler.Speed = -scaler.Speed;
+                }
+
+                Debug.Log($"scaler.Speed = {scaler.Speed}");
+
+                scale = scale + scaler.Speed;
 
                 chunkLocalToWorlds[i] = new LocalToWorld
                 {
-                    Value = float4x4.TRS(localToWorld.Position, quaternion.EulerXYZ(0, math.radians(angleDegrees), 0), scaler.To)
+                    Value = float4x4.TRS(localToWorld.Position, quaternion.EulerXYZ(0, math.radians(angleDegrees), 0), scale)
+                };
+
+                chunkScalers[i] = new Scaler
+                {
+                    From = scaler.From,
+                    To = scaler.To,
+                    Speed = scaler.Speed,
+                    Scale = scale
                 };
 
                 chunkRotators[i] = new Rotator
@@ -47,6 +62,8 @@ public class RotatorSystem : SystemBase
                     Angle = angleDegrees,
                     Speed = rotator.Speed
                 };
+
+                Debug.Log($"scale = {scale}"); // scale is sometimes zero. Investigate why.
 
                 Debug.Log($"chunkRotators[{i}].CurrentAngle = {chunkRotators[i].Angle}");
             }
@@ -80,8 +97,8 @@ public class RotatorSystem : SystemBase
 
         Entity testCubeEntityInstance = EntityManager.Instantiate(cubeEntity);
 
-        EntityManager.AddComponentData(testCubeEntityInstance, new Scaler { From = 2f, To = 5f, Speed = 2f });
-        EntityManager.AddComponentData(testCubeEntityInstance, new Rotator { Speed = 3f, Angle = 0f });
+        EntityManager.AddComponentData(testCubeEntityInstance, new Scaler { From = 2f, To = 5f, Speed = 0.1f, Scale = 3f });
+        EntityManager.AddComponentData(testCubeEntityInstance, new Rotator { Speed = 60f, Angle = 0f });
 
     }
 }
