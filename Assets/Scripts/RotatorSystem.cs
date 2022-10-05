@@ -31,8 +31,6 @@ public class RotatorSystem : SystemBase
                 Scaler scaler = chunkScalers[i];
                 Rotator rotator = chunkRotators[i];
 
-                float angleDegrees = rotator.Angle + rotator.Speed * DeltaTime;
-
                 float scale = scaler.Scale;
 
                 if (scale >= scaler.To || scale <= scaler.From)
@@ -40,14 +38,7 @@ public class RotatorSystem : SystemBase
                     scaler.Speed = -scaler.Speed;
                 }
 
-                Debug.Log($"scaler.Speed = {scaler.Speed}");
-
-                scale = scale + scaler.Speed;
-
-                chunkLocalToWorlds[i] = new LocalToWorld
-                {
-                    Value = float4x4.TRS(localToWorld.Position, quaternion.EulerXYZ(0, math.radians(angleDegrees), 0), scale)
-                };
+                scale += scaler.Speed;
 
                 chunkScalers[i] = new Scaler
                 {
@@ -57,13 +48,22 @@ public class RotatorSystem : SystemBase
                     Scale = scale
                 };
 
+                Debug.Log($"scaler.Speed = {scaler.Speed}");
+
+                Debug.Log($"scale = {scale}"); // scale is sometimes zero. Investigate why.
+
+                float angleDegrees = rotator.Angle + rotator.Speed * DeltaTime;
+
+                chunkLocalToWorlds[i] = new LocalToWorld
+                {
+                    Value = float4x4.TRS(localToWorld.Position, quaternion.EulerXYZ(0, math.radians(angleDegrees), 0), scale)
+                };
+
                 chunkRotators[i] = new Rotator
                 {
                     Angle = angleDegrees,
                     Speed = rotator.Speed
                 };
-
-                Debug.Log($"scale = {scale}"); // scale is sometimes zero. Investigate why.
 
                 Debug.Log($"chunkRotators[{i}].CurrentAngle = {chunkRotators[i].Angle}");
             }
