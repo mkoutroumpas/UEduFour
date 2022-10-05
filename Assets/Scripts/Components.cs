@@ -11,4 +11,5 @@ public struct Scaler : IComponentData
     public float From;
     public float To;
     public float Speed;
+    public float Scale;
 }
