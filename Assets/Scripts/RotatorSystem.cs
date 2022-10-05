@@ -10,6 +10,9 @@ public class RotatorSystem : SystemBase
 {
     private EntityQuery entityQuery;
 
+    private const int DemoCubesAmountDimension = 20;
+    private const int DemoCubesAmountStep = 5;
+
     [BurstCompile]
     struct ScalerAndRotatorJob : IJobChunk
     {
@@ -97,11 +100,21 @@ public class RotatorSystem : SystemBase
 
         Entity cubeEntity = GameObjectConversionUtility.ConvertGameObjectHierarchy(cube, settings);
 
-        Entity testCubeEntityInstance = EntityManager.Instantiate(cubeEntity);
+        GenerateAndAddDemoEntitiesXZ(cubeEntity, DemoCubesAmountDimension, DemoCubesAmountStep);
+    }
 
-        EntityManager.SetComponentData(testCubeEntityInstance, new Translation { Value = new float3(3f, 0f, 0f) });
-        EntityManager.AddComponentData(testCubeEntityInstance, new Scaler { From = 2f, To = 5f, Speed = 0.1f, Scale = 3f });
-        EntityManager.AddComponentData(testCubeEntityInstance, new Rotator { Speed = 60f, Angle = 0f });
+    private void GenerateAndAddDemoEntitiesXZ(Entity basedOnEntity, int cubesAmountDimension, int cubesAmountStep)
+    {
+        for (int x = -cubesAmountDimension; x <= cubesAmountDimension; x += cubesAmountStep)
+        {
+            for (int z = -cubesAmountDimension; z <= cubesAmountDimension; z += cubesAmountStep)
+            {
+                Entity testCubeEntityInstance = EntityManager.Instantiate(basedOnEntity);
 
+                EntityManager.SetComponentData(testCubeEntityInstance, new Translation { Value = new float3(x, 0f, z) });
+                EntityManager.AddComponentData(testCubeEntityInstance, new Scaler { From = 2f, To = 5f, Speed = 0.1f, Scale = 3f });
+                EntityManager.AddComponentData(testCubeEntityInstance, new Rotator { Speed = 60f, Angle = 0f });
+            }
+        }
     }
 }
