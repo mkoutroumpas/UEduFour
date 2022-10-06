@@ -105,6 +105,8 @@ public class RotatorSystem : SystemBase
 
     private void GenerateAndAddDemoEntitiesXZ(Entity basedOnEntity, int cubesAmountDimension, int cubesAmountStep)
     {
+        Unity.Mathematics.Random r = new Unity.Mathematics.Random(1);
+        
         for (int x = -cubesAmountDimension; x <= cubesAmountDimension; x += cubesAmountStep)
         {
             for (int z = -cubesAmountDimension; z <= cubesAmountDimension; z += cubesAmountStep)
@@ -112,7 +114,7 @@ public class RotatorSystem : SystemBase
                 Entity testCubeEntityInstance = EntityManager.Instantiate(basedOnEntity);
 
                 EntityManager.SetComponentData(testCubeEntityInstance, new Translation { Value = new float3(x, 0f, z) });
-                EntityManager.AddComponentData(testCubeEntityInstance, new Scaler { From = 2f, To = 5f, Speed = 0.1f, Scale = 3f });
+                EntityManager.AddComponentData(testCubeEntityInstance, new Scaler { From = r.NextFloat(0.5f, 2f), To = r.NextFloat(3f, 7f), Speed = r.NextFloat(0.005f, 0.2f), Scale = 2.5f });
                 EntityManager.AddComponentData(testCubeEntityInstance, new Rotator { Speed = 60f, Angle = 0f });
             }
         }
