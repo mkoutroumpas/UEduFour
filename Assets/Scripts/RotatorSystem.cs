@@ -10,7 +10,7 @@ public class RotatorSystem : SystemBase
 {
     private EntityQuery entityQuery;
 
-    private const int DemoCubesAmountDimension = 40;
+    private const int DemoCubesAmountDimension = 60;
     private const int DemoCubesAmountStep = 5;
 
     [BurstCompile]
