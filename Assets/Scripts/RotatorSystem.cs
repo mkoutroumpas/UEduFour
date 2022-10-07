@@ -53,9 +53,7 @@ public class RotatorSystem : SystemBase
                     Scale = scale
                 };
 
-                if (EnableLogging) Debug.Log($"scaler.Speed = {scaler.Speed}");
-
-                if (EnableLogging) Debug.Log($"scale = {scale}"); // scale is sometimes zero. Investigate why.
+                if (EnableLogging) Debug.Log($"scaler.Speed = {scaler.Speed}, scale = {scale}"); // scale is sometimes zero. Investigate why.
 
                 float angleDegrees = rotator.Angle + rotator.Speed * DeltaTime;
 
