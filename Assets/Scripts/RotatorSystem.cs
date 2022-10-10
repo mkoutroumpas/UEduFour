@@ -6,7 +6,7 @@ using Unity.Transforms;
 using Unity.Collections;
 using Unity.Burst;
 
-public class RotatorSystem : SystemBase
+public class RotatorScalerSystem : SystemBase
 {
     private EntityQuery entityQuery;
 
