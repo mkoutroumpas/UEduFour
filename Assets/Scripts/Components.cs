@@ -15,3 +15,11 @@ public struct Scaler : IComponentData
     public float Speed;
     public float Scale;
 }
+
+[GenerateAuthoringComponent]
+public struct Translator : IComponentData
+{
+    public float From;
+    public float To;
+    public Axis Along;
+}
