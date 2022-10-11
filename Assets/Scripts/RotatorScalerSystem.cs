@@ -90,7 +90,10 @@ public class RotatorScalerSystem : SystemBase
         base.OnCreate();
 
         entityQuery = GetEntityQuery(
-            ComponentType.ReadOnly<LocalToWorld>(), ComponentType.ReadWrite<Scaler>(), ComponentType.ReadWrite<Rotator>());
+            ComponentType.ReadOnly<LocalToWorld>(),
+            ComponentType.ReadWrite<Scaler>(),
+            ComponentType.ReadWrite<Rotator>(),
+            ComponentType.ReadWrite<Translator>());
 
         GameObject cube = Resources.Load("Cube", typeof(GameObject)) as GameObject;
 
