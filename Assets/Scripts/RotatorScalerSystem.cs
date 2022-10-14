@@ -46,6 +46,17 @@ public class RotatorScalerSystem : SystemBase
                     translator.Speed = -translator.Speed;
                 }
 
+                translation += translator.Speed;
+
+                chunkTranslators[i] = new Translator
+                {
+                    From = scaler.From,
+                    To = scaler.To,
+                    Speed = scaler.Speed,
+                    Translation = translation,
+                    Along = translator.Along
+                };
+
                 float scale = scaler.Scale;
 
                 if (scale >= scaler.To || scale <= scaler.From)
