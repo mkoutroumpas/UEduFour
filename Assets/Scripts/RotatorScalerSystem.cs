@@ -39,6 +39,13 @@ public class RotatorScalerSystem : SystemBase
                 Rotator rotator = chunkRotators[i];
                 Translator translator = chunkTranslators[i];
 
+                float translation = translator.Translation;
+
+                if (translation >= translator.To || translation <= translator.From)
+                {
+                    translator.Speed = -translator.Speed;
+                }
+
                 float scale = scaler.Scale;
 
                 if (scale >= scaler.To || scale <= scaler.From)
