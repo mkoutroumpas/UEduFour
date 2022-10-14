@@ -21,5 +21,7 @@ public struct Translator : IComponentData
 {
     public float From;
     public float To;
+    public float Speed;
+    public float Translation;
     public Axis Along;
 }
