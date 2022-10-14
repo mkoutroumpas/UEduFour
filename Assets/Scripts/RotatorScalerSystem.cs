@@ -23,18 +23,21 @@ public class RotatorScalerSystem : SystemBase
         public ArchetypeChunkComponentType<LocalToWorld> LocalToWorldArchetypeChunkComponentType;
         public ArchetypeChunkComponentType<Scaler> ScalerArchetypeChunkComponentType;
         public ArchetypeChunkComponentType<Rotator> RotatorArchetypeChunkComponentType;
+        public ArchetypeChunkComponentType<Translator> TranslatorArchetypeChunkComponentType;
 
         public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
         {
             NativeArray<LocalToWorld> chunkLocalToWorlds = chunk.GetNativeArray(LocalToWorldArchetypeChunkComponentType);
             NativeArray<Scaler> chunkScalers = chunk.GetNativeArray(ScalerArchetypeChunkComponentType);
             NativeArray<Rotator> chunkRotators = chunk.GetNativeArray(RotatorArchetypeChunkComponentType);
+            NativeArray<Translator> chunkTranslators = chunk.GetNativeArray(TranslatorArchetypeChunkComponentType);
 
             for (var i = 0; i < chunk.Count; i++)
             {
                 LocalToWorld localToWorld = chunkLocalToWorlds[i];
                 Scaler scaler = chunkScalers[i];
                 Rotator rotator = chunkRotators[i];
+                Translator translator = chunkTranslators[i];
 
                 float scale = scaler.Scale;
 
@@ -80,6 +83,7 @@ public class RotatorScalerSystem : SystemBase
             LocalToWorldArchetypeChunkComponentType = GetArchetypeChunkComponentType<LocalToWorld>(),
             ScalerArchetypeChunkComponentType = GetArchetypeChunkComponentType<Scaler>(),
             RotatorArchetypeChunkComponentType = GetArchetypeChunkComponentType<Rotator>(),
+            TranslatorArchetypeChunkComponentType = GetArchetypeChunkComponentType<Translator>(),
             DeltaTime = Time.DeltaTime
 
         }.ScheduleParallel(entityQuery, Dependency);
