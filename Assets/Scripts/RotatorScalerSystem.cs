@@ -57,6 +57,17 @@ public class RotatorScalerSystem : SystemBase
                     Along = translator.Along
                 };
 
+                float3 position = new float3();
+
+                if (translator.Along == Axis.X) position.x = translation;
+                else position.x = localToWorld.Position.x;
+
+                if (translator.Along == Axis.Y) position.y = translation;
+                else position.y = localToWorld.Position.y;
+
+                if (translator.Along == Axis.Z) position.z = translation;
+                else position.z = localToWorld.Position.z;
+
                 float scale = scaler.Scale;
 
                 if (scale >= scaler.To || scale <= scaler.From)
@@ -80,7 +91,7 @@ public class RotatorScalerSystem : SystemBase
 
                 chunkLocalToWorlds[i] = new LocalToWorld
                 {
-                    Value = float4x4.TRS(localToWorld.Position, quaternion.EulerXYZ(0, math.radians(angleDegrees), 0), scale)
+                    Value = float4x4.TRS(position, quaternion.EulerXYZ(0, math.radians(angleDegrees), 0), scale)
                 };
 
                 chunkRotators[i] = new Rotator
