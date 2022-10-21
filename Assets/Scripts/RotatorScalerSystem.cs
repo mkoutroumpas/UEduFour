@@ -48,15 +48,6 @@ public class RotatorScalerSystem : SystemBase
 
                 translation += translator.Speed;
 
-                chunkTranslators[i] = new Translator
-                {
-                    From = scaler.From,
-                    To = scaler.To,
-                    Speed = scaler.Speed,
-                    Translation = translation,
-                    Along = translator.Along
-                };
-
                 float3 position = new float3();
 
                 if (translator.Along == Axis.X) position.x = translation;
@@ -77,6 +68,15 @@ public class RotatorScalerSystem : SystemBase
 
                 scale += scaler.Speed;
 
+                if (EnableLogging) Debug.Log($"scaler.Speed = {scaler.Speed}, scale = {scale}"); // scale is sometimes zero. Investigate why.
+
+                float angleDegrees = rotator.Angle + rotator.Speed * DeltaTime;
+
+                chunkLocalToWorlds[i] = new LocalToWorld
+                {
+                    Value = float4x4.TRS(position, quaternion.EulerXYZ(0, math.radians(angleDegrees), 0), scale)
+                };
+
                 chunkScalers[i] = new Scaler
                 {
                     From = scaler.From,
@@ -85,13 +85,13 @@ public class RotatorScalerSystem : SystemBase
                     Scale = scale
                 };
 
-                if (EnableLogging) Debug.Log($"scaler.Speed = {scaler.Speed}, scale = {scale}"); // scale is sometimes zero. Investigate why.
-
-                float angleDegrees = rotator.Angle + rotator.Speed * DeltaTime;
-
-                chunkLocalToWorlds[i] = new LocalToWorld
+                chunkTranslators[i] = new Translator
                 {
-                    Value = float4x4.TRS(position, quaternion.EulerXYZ(0, math.radians(angleDegrees), 0), scale)
+                    From = scaler.From,
+                    To = scaler.To,
+                    Speed = scaler.Speed,
+                    Translation = translation,
+                    Along = translator.Along
                 };
 
                 chunkRotators[i] = new Rotator
