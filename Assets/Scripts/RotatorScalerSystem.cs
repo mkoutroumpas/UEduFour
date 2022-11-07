@@ -10,7 +10,7 @@ public class RotatorScalerSystem : SystemBase
 {
     private EntityQuery entityQuery;
 
-    private const int DemoCubesAmountDimension = 200;
+    private const int DemoCubesAmountDimension = 250;
     private const int DemoCubesAmountStep = 5;
 
     [BurstCompile]
